@@ -6,6 +6,8 @@ import service.strategy.ImpostoCanada;
 import service.strategy.ImpostoEua;
 
 import java.util.Scanner;
+import java.util.HashMap;
+import java.util.Map;
 
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
@@ -13,22 +15,21 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
 
-        ImpostoStrategy estrategia = null;
+        Map<String, ImpostoStrategy> estrategias = new HashMap<>();
+        estrategias.put("brasil", new ImpostoBrasil());
+        estrategias.put("canadá", new ImpostoCanada());
+        estrategias.put("eua", new ImpostoEua());
+
         Scanner sc = new Scanner(System.in);
 
-            System.out.print("\n\nCálculo de Imposto\n-Brasil\n-Canadá\n-EUA\n\n");
-            System.out.print("Selecione o país: ");
-            String pais = sc.nextLine();
-            System.out.print("Digite o valor: ");
-            double valor = sc.nextDouble();
+        System.out.print("\n\nCálculo de Imposto\n-Brasil\n-Canadá\n-EUA\n\n");
+        System.out.print("Selecione o país: ");
+        String pais = sc.nextLine().toLowerCase();
 
-            if (pais.equalsIgnoreCase("Brasil")){
-                estrategia = new ImpostoBrasil();
-            } else if (pais.equalsIgnoreCase("Canadá")) {
-                estrategia = new ImpostoCanada();
-            } else if (pais.equalsIgnoreCase("EUA")) {
-                new PedidoVenda(new ImpostoEua());
-            }
+        ImpostoStrategy estrategia = estrategias.getOrDefault(pais, new ImpostoBrasil());
+
+        System.out.print("Digite o valor: ");
+        double valor = sc.nextDouble();
 
 
         PedidoVenda pedido = new PedidoVenda(estrategia);
